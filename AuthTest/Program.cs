@@ -22,6 +22,8 @@ public class Program
         var httpPort = 5300;
         var builder = WebApplication.CreateBuilder(args);
         builder.WebHost.ConfigureKestrel(options => { options.ListenAnyIP(httpPort); });
+
+        builder.Services.AddControllers();
         
         var app = builder.Build();
 
@@ -31,7 +33,7 @@ public class Program
             TokenPosition = TokenPosition.QueryAndHeader
         });
 
-        app.MapGet("/test", async (context) =>
+        app.MapGet("/", async (context) =>
         {
             var response = new
             {
@@ -41,6 +43,7 @@ public class Program
             await context.Response.WriteAsJsonAsync(response);
         });
 
+        app.MapControllers();
         app.Lifetime.ApplicationStarted.Register(() => Console.WriteLine("App started"));
         app.Lifetime.ApplicationStopped.Register(() => Console.WriteLine("App started stopped"));
         app.Lifetime.ApplicationStopping.Register(() => Console.WriteLine("App started stopping"));
